@@ -12,9 +12,7 @@ export async function main(ns) {
 
     for (let i = 0; i < ns.hacknet.numNodes(); i++) {
       ns.print('Attempting to purchase upgrades for node: ' + i)
-      if (ns.hacknet.getNodeStats(i).level < 110) {
-        ns.hacknet.upgradeLevel(i);
-      }
+      ns.hacknet.upgradeLevel(i);
       ns.hacknet.upgradeRam(i);
       ns.hacknet.upgradeCore(i);
     }

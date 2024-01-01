@@ -13,22 +13,28 @@ export async function main(ns) {
 
   for (let i = 0; i < targets.length; i++) {
     let target = targets[i];
-    ns.tprint('Target: ' + target);
 
     let requiredHackingLevel = ns.getServerRequiredHackingLevel(target);
     if (requiredHackingLevel > currentHackingLevel) {
-      ns.tprint('Required hacking level ' + requiredHackingLevel + ' is higher than current hacking level ' + currentHackingLevel)
+      //ns.tprint('Required hacking level ' + requiredHackingLevel + ' is higher than current hacking level ' + currentHackingLevel)
       continue;
     }
 
     if (!ns.hasRootAccess(target)) {
       let openPortsRequired = ns.getServerNumPortsRequired(target);
-      if (openPortsRequired > 2) {
+      if (openPortsRequired > 3) {
         ns.tprint('Skipping... Open ports required: ' + openPortsRequired);
         continue;
       }
-      ns.brutessh(target);
-      ns.ftpcrack(target);
+      if (ns.fileExists('BruteSSH.exe', 'home')) {
+        ns.brutessh(target);
+      }
+      if (ns.fileExists('FTPCrack.exe', 'home')) {
+        ns.ftpcrack(target);
+      }
+      if (ns.fileExists('relaySMTP.exe', 'home')) {
+        ns.relaysmtp(target);
+      }
       ns.nuke(target);
     }
 
@@ -44,8 +50,9 @@ export async function main(ns) {
     
       ns.scp(exploitScriptName, target);
          
-      ns.tprint('Ram free: ' + ns.formatNumber(ramFree));
-      ns.tprint('Ram required: ' + ns.formatNumber(scriptRamRequired));
+      ns.tprint('Target:           ' + target); 
+      ns.tprint('Ram free:         ' + ns.formatNumber(ramFree));
+      ns.tprint('Ram required:     ' + ns.formatNumber(scriptRamRequired));
       ns.tprint('Threads to spawn: ' + threadCount);
       
       for (let noThreads = 0; noThreads < threadCount; noThreads++) {
@@ -54,7 +61,7 @@ export async function main(ns) {
       
     }
     else {
-      ns.tprint('Script is already running with correct args');
+      //ns.tprint('Script is already running with correct args');
     }
   }
 }
